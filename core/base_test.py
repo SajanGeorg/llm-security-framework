@@ -16,13 +16,29 @@ adding a new category means implementing this interface, nothing else.
 
 import json
 import os
+import glob
+import re
+from xml.parsers.expat import model
 from core.attacker import send_payload
+
 
 
 def safe_model_name(model):
     """'gpt-oss:120b-cloud' -> 'gpt-oss_120b-cloud' for safe filenames."""
     return model.replace(":", "_").replace("/", "_")
 
+def next_run_number(prefix, model):
+    """Scan report/ for existing runN files for this category+model and
+    return the next number. First run for a category is 1."""
+    safe = safe_model_name(model)
+    pattern = f"report/{prefix}_{safe}_run*.json"
+    existing = glob.glob(pattern)
+    nums = []
+    for path in existing:
+        m = re.search(r"_run(\d+)\.json$", path)
+        if m:
+            nums.append(int(m.group(1)))
+    return max(nums) + 1 if nums else 1
 
 class BaseTest:
     # ---- subclasses MUST set these ----
@@ -81,7 +97,8 @@ class BaseTest:
 
         # save to a per-category, per-model file
         os.makedirs("report", exist_ok=True)
-        out = f"report/{self.results_prefix}_{safe_model_name(model)}.json"
+        run = next_run_number(self.results_prefix, model)
+        out = f"report/{self.results_prefix}_{safe_model_name(model)}_run{run}.json"
         with open(out, "w", encoding="utf-8") as f:
             json.dump(results, f, indent=2, ensure_ascii=False)
 
