@@ -10,6 +10,8 @@ Run:  python main.py
 
 import yaml
 from core import reporter
+from dotenv import load_dotenv
+load_dotenv()
 from tests.llm01_jailbreak import LLM01Test
 from tests.llm02_sensitive import LLM02Test
 from tests.llm05_output import  LLM05Test
@@ -19,8 +21,8 @@ from tests.llm10_consumption import LLM10Test
 
 # the framework's registered test categories — add new ones here
 TESTS = [
-  LLM01Test(), LLM02Test(), LLM05Test(),
-    LLM07Test(), LLM09Test(), LLM10Test(),
+  LLM01Test(), 
+  LLM02Test(),LLM05Test(),LLM07Test(), LLM09Test(), LLM10Test(),
 ]
 
 
