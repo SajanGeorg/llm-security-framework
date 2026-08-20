@@ -17,6 +17,7 @@ import ollama
 from openai import OpenAI
 from dotenv import load_dotenv
 load_dotenv()
+
 _anthropic_client = None
 _openai_client = None
 
@@ -39,6 +40,9 @@ def _get_openai():
 
 def _is_openai(model):
     m = str(model).lower()
+    # Ollama cloud models (gpt-oss, qwen, gemma) end in "-cloud" — never OpenAI
+    if m.endswith("cloud"):
+        return False
     return m.startswith("gpt") or m.startswith("o1") or m.startswith("o3") or m.startswith("o4")
 
 

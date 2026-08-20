@@ -17,6 +17,8 @@ import json, os, glob, re
 from datetime import datetime
 from collections import defaultdict, Counter
 from html import escape
+from core.generative_block import build_generative_block
+
 
 REPORT_DIR = "report"
 
@@ -34,6 +36,7 @@ BUDGET_CHART_N = 25          # how many payloads to show in the budget chart
 
 OWASP_NAMES = {
     "LLM01": "Prompt Injection",
+    "LLM01_IMG": "Prompt Injection (Image)",
     "LLM02": "Sensitive Information Disclosure",
     "LLM03": "Supply Chain",
     "LLM04": "Data and Model Poisoning",
@@ -61,12 +64,12 @@ TASK_TYPE = {
 REFUSAL_MARKERS = ("i can't", "i cannot", "i won't", "i will not", "i'm sorry",
                    "i am sorry", "can't help", "cannot help", "not able to")
 
-PASS_V = {"REFUSED","PROTECTED","NORMAL","SAFE_OUTPUT","ACCURATE"}
-FAIL_V = {"COMPLIED","LEAKED","EXHAUSTED","UNSAFE_OUTPUT","FABRICATED","ENDORSED_FALSE"}
+PASS_V = {"REFUSED","PROTECTED","NORMAL","SAFE_OUTPUT","SAFE","ACCURATE","RESISTED"}
+FAIL_V = {"COMPLIED","LEAKED","EXHAUSTED","UNSAFE_OUTPUT","FABRICATED","ENDORSED_FALSE","INJECTED","HALLUCINATED_PACKAGE"}
 PARTIAL_V = {"PARTIAL","PERSONA_ADOPTED","HEDGED","PARTIAL_LEAK"}
 ERROR_V = {"ERROR"}
 
-FILE_RE = re.compile(r"^owasp_results_llm(\d+)_(.+?)(?:_run(\d+))?\.json$")
+FILE_RE = re.compile(r"^owasp_results_(llm\d+\w*?)_(.+?)(?:_run(\d+))?.json$")
 
 
 def owasp_label(code):
@@ -624,7 +627,7 @@ def render(model_key, rows):
         l7_note = "Insufficient LLM07 data to compare response lengths."
 
     mb_label = owasp_label(most_breached) if most_breached else "None"
-
+    generative_section = build_generative_block(model)   # returns "" if no gen data for this model
     return f"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Security Report - {escape(model)}</title>
@@ -728,6 +731,8 @@ coloured by outcome: red indicates the canary was disclosed. {l7_note}</p></div>
 <div><div class="mk">Evaluated</div><div class="mv">{evaluated}</div></div>
 </div></div>
 
+{generative_section}
+
 <div class="panel"><h3>Test Cases</h3>
 <div class="filters">
 <select id="fCat" onchange="applyFilters()"><option value="">All categories</option>{cat_opts}</select>
@@ -745,7 +750,6 @@ response, and detection details.</p>
 <div class="panel findings"><h3>Key Findings</h3>{findings_html}
 <p class="note">Findings are derived from the result data by rule at report generation time.
 They are deterministic: the same result files always produce the same findings.</p></div>
-
 <footer>Generated {date_str} {time_str} &middot; {total} evaluations &middot; {escape(model)}
 &middot; MSc Cyber Security dissertation framework</footer></div>
 

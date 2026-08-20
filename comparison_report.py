@@ -1,6 +1,6 @@
 import json, glob, re, os
 from collections import defaultdict
-
+from core.generative_block import build_generative_comparison
 PASS_V = {"REFUSED","PROTECTED","NORMAL","SAFE_OUTPUT","ACCURATE"}
 FAIL_V = {"COMPLIED","LEAKED","EXHAUSTED","UNSAFE_OUTPUT","FABRICATED","ENDORSED_FALSE"}
 PART_V = {"PARTIAL","PERSONA_ADOPTED","HEDGED","PARTIAL_LEAK"}
@@ -62,6 +62,20 @@ def maj_fail(rows,cat):
         if r["cat"]==cat: ids[r["id"]].append(r["res"])
     return {i for i,v in ids.items() if v.count("fail")>len(v)/2}
 
+
+def image_heat_entries(model):
+    """Return {(catkey, id): {run: bucket}} for a model's image data, or {}.
+    catkey 'LLM11_IMG' sorts after LLM10 so it appears at the end of the strip.
+    Verdicts are mapped to pass/fail/partial so the shared CSS colours apply."""
+    imap={"RESISTED":"pass","INJECTED":"fail","PARTIAL":"partial","ERROR":"error"}
+    data=load_image_substudy()
+    if model not in data: return {}
+    out={}
+    for r in data[model]:
+        key=("LLM11_IMG", r["mech"][:10]+"-"+r["id"])
+        out.setdefault(key,{})[r["run"]]=imap.get(r["verdict"],"partial")
+    return out
+
 def heatmap_html(by):
     runs=sorted({rn for v in by.values() for rn in v})
     keys=sorted(by.keys())
@@ -77,9 +91,91 @@ def heatmap_html(by):
             if last is not None: order.append((last,i-start))
             last,start=cat,i
     order.append((last,len(keys)-start))
-    band="".join(f"<div class='hband' style='flex:0 0 {cnt*7-1}px' title='{c}'><span>{c[3:]}</span></div>" for c,cnt in order)
+    band="".join(f"<div class='hband' style='flex:0 0 {cnt*7-1}px' title='{c}'><span>{'IMG' if c=='LLM11_IMG' else c[3:]}</span></div>" for c,cnt in order)
     rlab="".join(f"<div class='hrl'>R{rn}</div>" for rn in runs)
     return f"""<div class="hmwrap"><div class="hrls">{rlab}<div class='hrl' style='visibility:hidden'>b</div></div><div class="hbody"><div class="hgrid">{''.join(cols)}</div><div class="hbandrow">{band}</div></div></div>"""
+
+
+def load_image_substudy(folder="report"):
+    """Load the multimodal sub-study files (separate from the six-category data)."""
+    import glob as _g
+    pat=re.compile(r"owasp_results_llm01img_(.+?)_run(\d+)\.json$")
+    data=defaultdict(list)
+    for p in _g.glob(os.path.join(folder,"owasp_results_llm01img_*_run*.json")):
+        mm=pat.search(os.path.basename(p))
+        if not mm: continue
+        model=mm.group(1); run=int(mm.group(2))
+        for r in json.load(open(p,encoding="utf-8")):
+            ev=r.get("verdict_evidence") or {}
+            data[model].append({"id":r["id"],"run":run,
+                "mech":r.get("technique") or (ev.get("mechanism") if isinstance(ev,dict) else "") or "",
+                "verdict":r.get("verdict")})
+    return data
+
+def build_image_block():
+    data=load_image_substudy()
+    if not data: return ""
+    models=sorted(data)
+    # per-model resisted rate (majority across runs), and stability
+    def majority(rows):
+        by=defaultdict(list)
+        for r in rows: by[r["id"]].append(r["verdict"])
+        res=inj=0
+        for i,v in by.items():
+            (res:=res+1) if v.count("RESISTED")>len(v)/2 else (inj:=inj+1)
+        return res,inj,len(by)
+    # per-mechanism resisted (majority) per model
+    mechs=[]
+    for m in models:
+        for r in data[m]:
+            if r["mech"] not in mechs: mechs.append(r["mech"])
+    def mech_res(m,mech):
+        by=defaultdict(list)
+        for r in data[m]:
+            if r["mech"]==mech: by[r["id"]].append(r["verdict"])
+        # fraction of payloads in this mech resisted (majority)
+        if not by: return None
+        res=sum(1 for i,v in by.items() if v.count("RESISTED")>len(v)/2)
+        return round(100*res/len(by))
+    # stability per model
+    def stab(m):
+        by=defaultdict(dict)
+        for r in data[m]: by[(r["id"],)][r["run"]]=r["verdict"]
+        ids=by; stable=sum(1 for k in ids if len(set(ids[k].values()))==1)
+        return round(100*stable/len(ids)) if ids else 0
+    cards="".join(f'<div class="card"><div class="k">{m}</div>'
+        f'<div class="v">{majority(data[m])[0]}/{majority(data[m])[2]}</div>'
+        f'<div class="s">resisted (of {majority(data[m])[2]})</div></div>' for m in models)
+    mech_labels=json.dumps(mechs)
+    mech_data=json.dumps({m:[mech_res(m,me) for me in mechs] for m in models})
+
+    stab_rows="".join(f'<tr><td class="lbl">{m}</td><td>{stab(m)}%</td>'
+        f'<td>{majority(data[m])[0]}/{majority(data[m])[2]}</td></tr>' for m in models)
+    return f'''
+<div class="panel" style="border:2px solid #a371f7;margin-top:34px;">
+<div class="eyebrow" style="color:#a371f7;">Supplementary — Multimodal Sub-Study</div>
+<h1 style="font-size:20px;">Image-based Indirect Prompt Injection</h1>
+<p class="note">Two vision-capable models only. The Ollama-hosted targets
+(gpt-oss, minimax-m3) are text-only and cannot receive image input, so they are
+excluded from this sub-study by design. Eight distinct attack mechanisms, three runs each.</p>
+<div class="cards">{cards}</div>
+<h3 style="margin-top:18px;">Resistance by attack mechanism</h3>
+<div style="height:300px;"><canvas id="imgMech"></canvas></div>
+<p class="note">Percentage of payloads in each mechanism the model resisted (majority of runs). Higher is safer.</p>
+<h3 style="margin-top:20px;">Stability (both models, 3 runs)</h3>
+<table><tr><th>Model</th><th>Verdict stability</th><th>Resisted</th></tr>{stab_rows}</table>
+<p class="note">Stability = share of payloads with an identical verdict across all three runs.</p>
+</div>
+<script>
+const imgMechLabels={mech_labels}, imgMechData={mech_data};
+const imgModels=Object.keys(imgMechData), IPAL=['#58a6ff','#f0883e','#3fb950'];
+new Chart(document.getElementById('imgMech'),{{type:'bar',
+ data:{{labels:imgMechLabels,datasets:imgModels.map((m,i)=>({{label:m,data:imgMechData[m],backgroundColor:IPAL[i%3]}}))}},
+ options:{{maintainAspectRatio:false,plugins:{{legend:{{labels:{{color:'#8b949e'}}}}}},
+ scales:{{x:{{ticks:{{color:'#8b949e',font:{{size:9}}}},grid:{{display:false}}}},
+ y:{{beginAtZero:true,max:100,ticks:{{color:'#8b949e'}},grid:{{color:'#2d3340'}}}}}}}}}});
+</script>'''
+
 
 def build(out="report/comparison_report.html"):
     M=load(); mnames=sorted(M)
@@ -167,7 +263,15 @@ def build(out="report/comparison_report.html"):
     strows="".join(f'<tr><td class="lbl">{c} {NAMES[c]}</td>'+"".join(f"<td>{stab[m].get(c,0):.0f}%</td>" for m in mnames)+"</tr>" for c in cats)
     pies="".join(f'<div style="text-align:center"><div style="width:150px;height:150px;margin:auto"><canvas id="pie_{i}"></canvas></div><div class="s">{m}</div></div>' for i,m in enumerate(mnames))
     pie_js=json.dumps({m:[splits[m].get(k,0) for k in ("pass","partial","fail","error")] for m in mnames})
-    heat_html="".join(f'<div class="panel"><h3>Stability detail &mdash; {m}</h3>{heatmap_html(heat[m])}<p class="note">Each strip is one payload across its runs; red tick marks a flip.</p></div>' for m in mnames)
+    def _strip_for(m):
+        merged=dict(heat[m])
+        merged.update(image_heat_entries(m))
+        has_img = any(k[0]=="LLM11_IMG" for k in merged)
+        note = ("Each strip is one payload across its runs; red tick marks a flip. "
+                "The final IMG band is the image sub-study (this model is vision-capable)." if has_img
+                else "Each strip is one payload across its runs; red tick marks a flip.")
+        return f'<div class="panel"><h3>Stability detail &mdash; {m}</h3>{heatmap_html(merged)}<p class="note">{note}</p></div>'
+    heat_html="".join(_strip_for(m) for m in mnames)
     pm=mnames[0]
     fl=sorted([(c,len(maj_fail(M[pm],c))) for c in cats],key=lambda x:-x[1])
     par_lab=json.dumps([c for c,_ in fl]); par_val=json.dumps([v for _,v in fl])
@@ -213,6 +317,8 @@ Reproducibility caveat: category differences are read against verdict stability
 (below); a gap smaller than the models\' run-to-run variation is not decisive.
 </div></div>'''
 
+    image_block=build_image_block()
+    generative_comparison=build_generative_comparison()
     html=f"""<!DOCTYPE html><html><head><meta charset="utf-8"><title>Cross-model comparison</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
@@ -260,6 +366,8 @@ canvas{{max-height:340px;}}
 <div class="panel"><h3>Response Latency by Payload (both models)</h3><div style="height:300px;"><canvas id="latLine"></canvas></div><p class="note">One line per model, aligned by payload id. Colour per model (legend).</p></div>
 <div class="panel"><h3>Where Vulnerabilities Concentrate</h3><div style="height:300px;"><canvas id="pareto"></canvas></div><p class="note">Failures per category per model (majority of runs), categories ordered by combined total. Grouped so both models are directly comparable.</p></div>
 {overlap}
+{image_block}
+{generative_comparison}
 <script>
 const labels={labels},defence={defence_js},stab={stab_js},pie={pie_js};
 const latIds={lat_ids_js},lat={lat_js};

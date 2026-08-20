@@ -1,4 +1,4 @@
-target_model: "gpt-4o-mini-2024-07-18"
+target_model: "gpt-4o-mini"
 payloads_csv: "tools/labelled_sample.csv"
 results_file: "report/results.json"
 #target_model: "minimax-m3:cloud"
