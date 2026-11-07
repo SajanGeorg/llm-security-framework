@@ -1,6 +1,6 @@
 # LLM Security Testing Framework
 
-A Python framework that tests large language models against the **OWASP Top 10 for LLM Applications (2025)** and produces readable HTML reports. It was built for my MSc Cyber Security dissertation at Anglia Ruskin University (registered title: Cross-Layer Security Testing Framework for API & LLM Applications, narrowed to the LLM layer).
+A Python framework that tests large language models against the **OWASP Top 10 for LLM Applications (2025)** and produces readable HTML reports. It was built for my MSc Cyber Security dissertation at Anglia Ruskin University 
 
 ## Why I built it
 
