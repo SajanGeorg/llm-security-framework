@@ -212,7 +212,7 @@ Standards and datasets:
 
 ## Author
 
-Sajan Kunjumon, MSc Cyber Security, Anglia Ruskin University. Supervisor: Dr Shareeful Islam.
+Sajan Kunjumon, MSc Cyber Security, QA Engineer
 
 ## Contact
 
