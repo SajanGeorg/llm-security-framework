@@ -1,6 +1,6 @@
 # LLM Security Testing Framework
 
-A Python framework that tests large language models against the **OWASP Top 10 for LLM Applications (2025)** and produces readable HTML reports. It was built for my MSc Cyber Security dissertation at Anglia Ruskin University 
+A Python framework that tests large language models against the **OWASP Top 10 for LLM Applications (2025)** and produces readable HTML reports. It was built for my MSc Cyber Security dissertation at Anglia Ruskin University (registered title: Cross-Layer Security Testing Framework for API & LLM Applications, narrowed to the LLM layer).
 
 ## Why I built it
 
@@ -8,6 +8,8 @@ Two gaps motivated this project:
 
 1. Most LLM security tests are not tagged against the OWASP Top 10 categories. They tend to focus on prompt injection only.
 2. Tools such as Garak give log-style output. That is hard to learn from. This framework shows input, output and verdict for every test case, and lets you look at the results from different angles (per category, per model, across repeated runs).
+
+I am a QA automation engineer with five years of industry experience, so I approached LLM security as a test engineering problem. That is why the framework uses a reusable base test class, repeated runs and reproducibility checks, the same ideas used in test automation frameworks, applied to LLM security.
 
 ## What it covers
 
@@ -185,8 +187,27 @@ This tool sends adversarial prompts to AI models. Only run it against models you
 
 ## References
 
+Research papers (Harvard style):
+
+1. Zou, A. et al. (2023) Universal and Transferable Adversarial Attacks on Aligned Language Models. arXiv:2307.15043.
+2. Shin, T. et al. (2020) AutoPrompt: Eliciting Knowledge from Language Models with Automatically Generated Prompts. Proceedings of EMNLP 2020.
+3. Yu, J. et al. (2023) GPTFuzzer: Red Teaming Large Language Models with Auto-Generated Jailbreak Prompts. arXiv:2309.10253.
+4. Chao, P. et al. (2023) Jailbreaking Black Box Large Language Models in Twenty Queries. arXiv:2310.08419.
+5. Zhou, W. et al. (2024) EasyJailbreak: A Unified Framework for Jailbreaking Large Language Models. arXiv:2403.12171.
+6. Chu, J. et al. (2024) JailbreakRadar: Comprehensive Assessment of Jailbreak Attacks Against LLMs. arXiv:2402.05668.
+7. Li, J. et al. (2023) HaluEval: A Large-Scale Hallucination Evaluation Benchmark for Large Language Models. Proceedings of EMNLP 2023.
+8. Greshake, K. et al. (2023) Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection. arXiv:2302.12173.
+9. Derczynski, L. et al. (2024) garak: A Framework for Security Probing Large Language Models. arXiv:2406.11036.
+10. Gulyamov, S. et al. (2026) Prompt Injection Attacks in Large Language Models and AI Agent Systems: A Comprehensive Review of Vulnerabilities, Attack Vectors, and Defense Mechanisms. Information, 17(1), 54. doi:10.3390/info17010054.
+11. Zhu, K. et al. (2023) PromptRobust: Towards Evaluating the Robustness of Large Language Models on Adversarial Prompts. arXiv:2306.04528.
+12. Liu, D. et al. (2024) A Survey of Attacks on Large Vision-Language Models: Resources, Advances, and Future Trends. arXiv:2407.07403.
+13. Wei, A., Haghtalab, N. and Steinhardt, J. (2023) Jailbroken: How Does LLM Safety Training Fail? Advances in Neural Information Processing Systems (NeurIPS 2023).
+14. Perez, E. et al. (2022) Red Teaming Language Models with Language Models. Proceedings of EMNLP 2022.
+
+Standards and datasets:
+
 - OWASP Top 10 for LLM Applications 2025
-- Shen et al. (2024), "Do Anything Now" jailbreak prompts dataset (CCS 2024)
+- Shen, X. et al. (2024) "Do Anything Now": Characterizing and Evaluating In-The-Wild Jailbreak Prompts on Large Language Models. ACM CCS 2024
 - JailbreakBench, HarmBench, SaTML CTF dataset, DeepTeam
 
 ## Author
