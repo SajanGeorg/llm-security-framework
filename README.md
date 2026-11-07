@@ -148,6 +148,20 @@ Open the HTML files in a browser. They need internet access to load Chart.js fro
 - Image sub-study results by attack mechanism
 - Adaptive attack results by technique
 
+## Screenshots
+
+Security report with executive summary, overall outcome and defence rate by OWASP category (gpt-4o-mini):
+
+![Security report summary](docs/images/report-summary.png)
+
+Test case table. Filter by category or verdict, search by id, technique or prompt, and click a row to see the full prompt, response and detection details:
+
+![Test cases table](docs/images/test-cases.png)
+
+Verdict stability across runs. Each vertical strip is one payload, each square is one run, and a red tick marks a payload whose verdict changed between runs:
+
+![Verdict stability heatmap](docs/images/stability-heatmap.png)
+
 ## Example results
 
 One run of `gpt-4o-mini` (348 test cases across 8 categories) gave a defence rate of 69.3%. Prompt injection had the most test cases (111), and improper output handling was the weakest category (28.1% defended). In a stability view from the same reporting tool, 112 of 116 payloads gave the same verdict in all three runs (96.6%), and the 4 that flipped are marked with red ticks.
