@@ -1,6 +1,6 @@
 # LLM Security Testing Framework
 
-A Python framework that tests large language models against the **OWASP Top 10 for LLM Applications (2025)** and produces readable HTML reports. It was built for my MSc Cyber Security dissertation at Anglia Ruskin University 
+A Python framework that tests large language models against the **OWASP Top 10 for LLM Applications (2025)** and produces readable HTML reports. It was built for my MSc Cyber Security dissertation at Anglia Ruskin University (registered title: Cross-Layer Security Testing Framework for API & LLM Applications, narrowed to the LLM layer).
 
 ## Why I built it
 
@@ -181,7 +181,7 @@ Payloads are CSV files in `payloads/`. To add prompts to an existing category, a
 
 ## Responsible use
 
-This tool sends adversarial prompts to AI models. Only run it against models you own or have permission to test, and follow the provider's usage policy.
+This tool sends adversarial prompts to AI models. Only run it against models you own or have permission to test, and follow the provider's usage policy. Research ethics code: ETH2526-5823.
 
 ## References
 
@@ -191,4 +191,8 @@ This tool sends adversarial prompts to AI models. Only run it against models you
 
 ## Author
 
-Sajan George, MSc Cyber Security , QA Engineer
+Sajan Kunjumon, MSc Cyber Security, Anglia Ruskin University. Supervisor: Dr Shareeful Islam.
+
+## Contact
+
+For any enquiries, send me a message on GitHub ([@SajanGeorg](https://github.com/SajanGeorg)) or connect with me on LinkedIn ([Sajan George](https://www.linkedin.com/in/sajan-g/)).
