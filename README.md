@@ -183,7 +183,7 @@ Payloads are CSV files in `payloads/`. To add prompts to an existing category, a
 
 ## Responsible use
 
-This tool sends adversarial prompts to AI models. Only run it against models you own or have permission to test, and follow the provider's usage policy. Research ethics code: ETH2526-5823.
+This tool sends adversarial prompts to AI models. Only run it against models you own or have permission to test, and follow the provider's usage policy. 
 
 ## References
 
