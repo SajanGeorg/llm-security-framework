@@ -1,0 +1,2 @@
+report/*.html linguist-generated=true
+*.html linguist-detectable=false
