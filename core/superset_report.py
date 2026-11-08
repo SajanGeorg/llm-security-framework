@@ -2,10 +2,6 @@
 superset_report.py — ONE combined HTML: cross-model comparison on top, then each
 model's full per-model report below in a collapsible section.
 
-Place this file NEXT TO reporter.py (same folder) and run it. It imports the
-existing reporter, so it inherits all its charts, styling, and any fixes you make
-there. It does not duplicate reporter logic.
-
 Output: report/superset_report.html
 
 Requires reporter.py in the same directory (or on the Python path).

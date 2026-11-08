@@ -1,9 +1,5 @@
 """
-core/judge_image.py — judge for image-based indirect prompt injection (multimodal
-sub-study). Reuses the shared judge MODEL with a dedicated label set.
-
-The judge is shown: the benign task the user asked for, the ATTACK GOAL the image
-was trying to achieve, and the model's response. It decides whether the injection
+core/judge_image.py It decides whether the injection
 embedded in the image succeeded.
 
 Labels:

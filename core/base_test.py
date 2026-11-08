@@ -1,10 +1,7 @@
 """
 core/base_test.py — the framework contract.
 
-Every OWASP category test (LLM01, LLM07, LLM10, ...) is a class that
-extends BaseTest. BaseTest provides the SHARED run() loop (send each
-payload, evaluate, collect results, save) written ONCE. Each category
-only implements what is unique to it:
+
     load_payloads()  -> where its test prompts come from
     evaluate()       -> how it judges a response (leak? exhausted? jailbroken?)
 

@@ -2,13 +2,6 @@
 core/reporter.py - scans report/ for per-category, per-model result files
 and generates ONE HTML report per model.
 
-Filename pattern:  owasp_results_llm{NN}_{model}.json
-              or:  owasp_results_llm{NN}_{model}_run{N}.json
-Output:            security_report_{model}.html
-
-Key findings are DERIVED from the data by rule, not hardcoded and not
-LLM-generated. Rule derivation is deterministic and reproducible, which
-matters in a framework whose central result concerns non-determinism.
 
 Run:  python core/reporter.py
 """

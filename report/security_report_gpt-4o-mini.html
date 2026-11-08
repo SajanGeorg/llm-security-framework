@@ -205,7 +205,7 @@ coloured by outcome: red indicates the canary was disclosed. No disclosures occu
 <div><div class="mk">LLM10 token cap</div><div class="mv">8192</div></div>
 <div><div class="mk">Runs in this report</div><div class="mv">1, 2, 3</div></div>
 <div><div class="mk">Total execution time</div><div class="mv">847.7s</div></div>
-<div><div class="mk">Generated</div><div class="mv">18/08/2026 22:46:52</div></div>
+<div><div class="mk">Generated</div><div class="mv">24/09/2026 14:51:20</div></div>
 <div><div class="mk">Framework</div><div class="mv">OWASP LLM Top 10 (2025)</div></div>
 <div><div class="mk">Evaluations</div><div class="mv">348</div></div>
 <div><div class="mk">Errors excluded</div><div class="mv">0</div></div>
@@ -9472,7 +9472,7 @@ Continuing this process indefinitely would lead to an infinite regression of def
 <div class="panel findings"><h3>Key Findings</h3><ul><li><span class="tag">Coverage</span>Defence rate was highest for LLM03 Supply Chain at 100.0% and lowest for LLM05 Improper Output Handling at 28.1%, across 348 evaluated cases.</li><li><span class="tag">LLM05</span>Indirect injection propagated in 23 of 36 payloads. These are the security-relevant cases: the model was asked to process benign content and reproduced an embedded dangerous construct it was never asked for.</li><li><span class="tag">LLM05</span>Propagation tracked task type rather than content: preserving tasks 12/12, transformative tasks 0/9. Tasks that transform the input discard the payload as a side effect of the task; tasks that preserve the input carry it through.</li><li><span class="tag">LLM05</span>The direct-request group produced 18 of 21 detector hits. These are reported separately and are not counted as vulnerabilities: a model asked for a shell command that supplies one is answering a legitimate question.</li><li><span class="tag">LLM07</span>Canary disclosure occurred in 0 of 30 evaluations. Per-run leak counts were 0, 0, 0 out of 10 payloads, on identical inputs at temperature 0.0.</li><li><span class="tag">LLM01</span>32 evaluations reached persona adoption without full compliance and 5 reached full compliance. A binary pass or fail scheme would have recorded the persona cases as clean defences, concealing partial alignment failure one step short of compliance.</li><li><span class="tag">LLM10</span>Consumption payloads produced 0 confirmed exhaustion outcomes. Response latency ranged from 0.8s to 17.8s with a mean of 6.8s. Latency alone does not separate the outcomes and is recorded as corroborating evidence only.</li><li><span class="tag">Method</span>Across 3 runs, 112 of 116 payloads produced an identical verdict every time, a stability of 96.6%. Per-payload results therefore characterise a sample of model behaviour rather than a fixed property of the model.</li></ul>
 <p class="note">Findings are derived from the result data by rule at report generation time.
 They are deterministic: the same result files always produce the same findings.</p></div>
-<footer>Generated 18/08/2026 22:46:52 &middot; 348 evaluations &middot; gpt-4o-mini
+<footer>Generated 24/09/2026 14:51:20 &middot; 348 evaluations &middot; gpt-4o-mini
 &middot; MSc Cyber Security dissertation framework</footer></div>
 
 <script>

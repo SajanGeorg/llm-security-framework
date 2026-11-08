@@ -1,14 +1,6 @@
 """
 tests/llm01_img.py — Image-based indirect prompt injection (multimodal sub-study).
 
-SCOPE: this is a TWO-MODEL supplementary study (Claude, GPT-4o-mini), NOT part of
-the six-category cross-model comparison, because the Ollama target models are
-text-only and cannot receive image input. Reported separately.
-
-Each payload sends an attack IMAGE plus a benign text prompt. The judge decides
-whether the injection embedded in the image succeeded. The raw response is stored
-so results can be re-scored deterministically later without re-running.
-
 CSV columns: id, mechanism, image, benign_prompt, attack_goal, success_marker
 Images live in payloads/attack_images/.
 """

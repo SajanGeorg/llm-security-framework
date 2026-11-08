@@ -5,10 +5,6 @@ Importable by BOTH reporter.py (per-model) and comparison_report.py.
   build_generative_block(model, folder)   -> per-model block (or "")
   build_generative_comparison(folder)      -> cross-model block (or "")
 
-Per-model block includes: provenance panel, run table + range, adaptive-refinement
-funnel, attacker efficiency, per-run/technique charts, technique×run heatmap,
-strategy table, and a FILTERABLE + COLLAPSIBLE test-cases section. The whole block
-is collapsible so the reader can skip past it.
 """
 import json, glob, re, os
 from collections import defaultdict, Counter

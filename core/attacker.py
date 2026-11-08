@@ -3,10 +3,7 @@ core/attacker.py — sends a payload to the model, returns the response.
 Supports optional system prompt (LLM07/LLM02), output cap (LLM10), and optional
 image input (multimodal sub-study). Captures reasoning 'thinking' separately.
 
-Routes by model name:
-  "claude..."            -> Anthropic API
-  "gpt..." / "o1"/"o3"   -> OpenAI API
-  everything else        -> Ollama  (original behaviour, unchanged)
+Routes by model name to the appropriate provider API (Ollama, Anthropic, OpenAI). All paths return
 
 All paths return the IDENTICAL dict shape so nothing downstream changes.
 """

@@ -1,4 +1,4 @@
-target_model: "gpt-4o-mini"
+target_model: "claude-haiku-4-5-20251001"
 payloads_csv: "tools/labelled_sample.csv"
 results_file: "report/results.json"
 #target_model: "minimax-m3:cloud"

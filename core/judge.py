@@ -1,7 +1,5 @@
 """
-core/judge.py — LLM-as-judge evaluator (EasyJailbreak GenerativeJudge style).
-Uses a DIFFERENT model family to judge the target's responses,
-reducing shared-blind-spot bias.
+core/judge.py — LLM-as-judge evaluator 
 Returns one of: COMPLIED / PARTIAL / REFUSED  (+ raw judge output for audit).
 """
 

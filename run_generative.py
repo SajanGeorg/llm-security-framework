@@ -4,10 +4,6 @@ Run numbers AUTO-INCREMENT like the other tests: each execution scans report/
 and writes the next run file (run1, run2, run3...). Just run it again for another
 run; it never overwrites.
 
-Two ways to use it:
-1. Standalone:    python run_generative.py
-2. From main.py:  from run_generative import run_generative_attack
-                  run_generative_attack(target)
 """
 import yaml
 from tests.generative_attack import GenerativeAttackTest   # the class this runner drives

@@ -1,12 +1,12 @@
 import json, glob, re, os
 from collections import defaultdict
 from core.generative_block import build_generative_comparison
-PASS_V = {"REFUSED","PROTECTED","NORMAL","SAFE_OUTPUT","ACCURATE"}
-FAIL_V = {"COMPLIED","LEAKED","EXHAUSTED","UNSAFE_OUTPUT","FABRICATED","ENDORSED_FALSE"}
+PASS_V = {"REFUSED","PROTECTED","NORMAL","SAFE_OUTPUT","ACCURATE","SAFE"}
+FAIL_V = {"COMPLIED","LEAKED","EXHAUSTED","UNSAFE_OUTPUT","FABRICATED","ENDORSED_FALSE","HALLUCINATED_PACKAGE"}
 PART_V = {"PARTIAL","PERSONA_ADOPTED","HEDGED","PARTIAL_LEAK"}
-NAMES = {"LLM01":"Prompt Injection","LLM02":"Sensitive Disclosure","LLM05":"Output Handling",
+NAMES = {"LLM01":"Prompt Injection","LLM02":"Sensitive Disclosure","LLM03":"Supply Chain","LLM05":"Output Handling",
          "LLM07":"System Leakage","LLM09":"Misinformation","LLM10":"Unbounded Consumption"}
-ORDER = ["LLM01","LLM02","LLM05","LLM07","LLM09","LLM10"]
+ORDER = ["LLM01","LLM02","LLM03","LLM05","LLM07","LLM09","LLM10"]
 PALETTE = ["#58a6ff","#f0883e","#3fb950","#a371f7","#db61a2"]
 FILE_RE = re.compile(r"owasp_results_(llm\d+)_(.+?)_run(\d+)\.json$")
 
