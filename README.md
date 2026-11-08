@@ -1,12 +1,12 @@
 # LLM Security Testing Framework
 
-A Python framework that tests large language models against the **OWASP Top 10 for LLM Applications (2025)** and produces readable HTML reports. It was built for my MSc Cyber Security dissertation at Anglia Ruskin University (registered title: Cross-Layer Security Testing Framework for API & LLM Applications, narrowed to the LLM layer).
+A Python framework that tests large language models against the **OWASP Top 10 for LLM Applications (2025)** and produces readable HTML reports. It was built for my MSc Cyber Security dissertation.
 
 ## Why I built it
 
 Two gaps motivated this project:
 
-1. Most LLM security tests are not tagged against the OWASP Top 10 categories. They tend to focus on prompt injection only.
+1. Most LLM security tests are not tagged against the OWASP Top 10 LLM categories. They tend to focus on prompt injection only.
 2. Tools such as Garak give log-style output. That is hard to learn from. This framework shows input, output and verdict for every test case, and lets you look at the results from different angles (per category, per model, across repeated runs).
 
 I am a QA automation engineer with five years of industry experience, so I approached LLM security as a test engineering problem. That is why the framework uses a reusable base test class, repeated runs and reproducibility checks, the same ideas used in test automation frameworks, applied to LLM security.
@@ -235,7 +235,7 @@ Standards and datasets:
 
 ## Author
 
-Sajan Kunjumon, MSc Cyber Security, Anglia Ruskin University. Supervisor: Dr Shareeful Islam.
+Sajan Kunjumon | QA Engineer
 
 ## Contact
 
